@@ -20,10 +20,11 @@ def is_num(txt):
        ##   print_xyz_displ(atom_displ,Nfreq)
 
 def read_atom_displ(lines, start_line,size):
+    # ne lit que la  1  iere freq
     # Dictionnaire pour stocker les deplacements des atomes
     atom_displ = {}
     Ifreq=0
-    ifreq=0
+    Nfreq=size
     # Parcourir les lignes à partir de la ligne de départ
     for i in range(start_line+5, start_line+5+size):
         line = lines[i].strip()
@@ -38,33 +39,33 @@ def read_atom_displ(lines, start_line,size):
 
         # Diviser la ligne en colonnes
         columns = line.split()
-        print("sub",columns,len(columns))
+#        print(line)
+#        print("sub",columns,len(columns))
 
         # Récupérer les informations sur l'atome
         atom_number = int(columns[0])
         numeroZ = int(columns[1])  # Utiliser la colonne 2 comme numeroZ
+        symbol = numeroZ_to_symbol.get(numeroZ, f"Element{numeroZ}")
         x_coord = float(columns[2])
         y_coord = float(columns[3])
         z_coord = float(columns[4])
-        ifreq+=1
-        if len(columns) >= 5 and ifreq < Nfreq:
-           x_coord2 = float(columns[5])
-           y_coord2 = float(columns[6])
-           z_coord2 = float(columns[7])
-           ifreq+=1
-           if len(columns) >= 8 and ifreq < Nfreq:
-              x_coord3 = float(columns[8])
-              y_coord3 = float(columns[9])
-              z_coord3 = float(columns[10])
-              ifreq+=1
-        print(Ifreq,x_coord2)
-        Ifreq=Ifreq+ifreq
-        ifreq=0
+#        print("gGG",Ifreq,Nfreq,float(columns[2]),float(columns[5]))
+#        if len(columns) >= 5 and ifreq < Nfreq:
+#           x_coord2 = float(columns[5])
+#           y_coord2 = float(columns[6])
+#           z_coord2 = float(columns[7])
+##           print(Ifreq,x_coord2)
+#           ifreq+=1
+#           if len(columns) >= 8 and ifreq < Nfreq:
+#              x_coord3 = float(columns[8])
+#              y_coord3 = float(columns[9])
+#              z_coord3 = float(columns[10])
+#              ifreq+=1
+#        #print(Ifreq,x_coord2)
         # Stocker les displ dans le dictionnaire avec le numéro d'atome et numeroZ
-        atom_displ[Ifreq] = {'atom_number': atom_number,'numeroZ': numeroZ, 'x': x_coord, 'y': y_coord, 'z': z_coord}
-        atom_displ[Ifreq+1] = {'atom_number': atom_number,'numeroZ': numeroZ, 'x': x_coord2, 'y': y_coord2, 'z': z_coord2}
-        atom_displ[Ifreq+2] = {'atom_number': atom_number,'numeroZ': numeroZ, 'x': x_coord3, 'y': y_coord3, 'z': z_coord3}
-#       print(atom_displ)
+        atom_displ[atom_number] = {'symbol': symbol,'numeroZ': numeroZ, 'x': x_coord, 'y': y_coord, 'z': z_coord}
+##       print(atom_displ)
+
     return atom_displ
 
 
@@ -130,6 +131,12 @@ def process_arguments(nom_fic, option=None):
     if option is not None:
         print(f"Option : {option}")
 
+def print_xyz_displ(atom_displ,opt):
+    for atom_number, info in atom_displ.items():
+        symbol = info['symbol']
+        x_coord, y_coord, z_coord = info['x'], info['y'], info['z']
+        print("{:<4} {:6.3f} {:6.3f} {:6.3f}".format(symbol, x_coord, y_coord, z_coord))
+
 def print_xyz_coordinates(atom_coordinates,opt):
     """
     Print atom coordinates in formatted XYZ style.
@@ -170,6 +177,10 @@ if __name__ == "__main__":
         NImag=int(lines[pos_NImag[0]].split()[1])
       else:
         NImag=0
+      Freq=[]
+      for  i in range (1,2+min(NImag,2)):
+         Freq.append(float(lines[pos_Frequencies[0]].split()[1+i]))
+      print("Freq=",Freq)
     else:
         NImag=-1
     # Call read_atom_coordinates function for each start index
@@ -192,17 +203,17 @@ if __name__ == "__main__":
     print_xyz_coordinates(atom_coordinates,option)
     if len(pos_Frequencies) !=0 :
        Nfreq=min(NImag,3)
-       print("------",Nfreq       , "imaginary freq  collected ")
+       print()
+       phrase="NORMALMODES: 1 -----"+str(NImag)+" imaginary frequencies: "+str(Freq)
        try: 
-          Nfreq=int(input("----- combien a traiter? (enter par default)"))
+          Nfreq=int(input(phrase))
        except:
           pass
-       print ("traite",Nfreq)
-       for start_index in pos_Frequencies:
-          size=len(atom_coordinates)
-          atom_displ = read_atom_displ(lines, start_index,size)
-          print(atom_displ[0])
-       print_xyz_displ(atom_coordinates,pos_Frequencies,Nfreq)
+#       for start_index in pos_Frequencies:
+       size=len(atom_coordinates)
+       atom_displ = read_atom_displ(lines, pos_Frequencies[0],size)
+       print_xyz_displ(atom_displ,Nfreq)
+       print("   ",Freq[0])
        
-   
+      
 
