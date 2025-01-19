@@ -206,7 +206,7 @@ if __name__ == "__main__":
     if len(pos_Frequencies) !=0 :
        Nfreq=min(NImag,3)
        print()
-       phrase="NORMALMODES: 1 -----"+str(NImag)+" imaginary frequencies: "+str(Freq)
+       phrase="NORMALMODES:  -----"+str(NImag)+" imaginary frequencies: "+str(Freq)
        try: 
           Nfreq=int(input(phrase))
        except:
