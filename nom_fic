@@ -1,0 +1,33 @@
+#!/bin/csh
+# donne le nom d'un fichier en .log 
+# sans utiliser set BASE = `basename $1 .log`
+#
+# usage nom_fic [[nom].log[~]]
+#
+set vaar = `echo $1 |sed  's/^[[:blank:]]*//;s/[[:blank:]]*$//' `
+if ( $1 == "" ) then
+  set infile=`ls -1c -t *.log *xmo|head -1 `
+  if ( $infile == "" ) then
+      echo " no file there "
+      exit 1
+  endif
+  set NOM_FIC=$infile
+#  echo ${vaar}"-$1--"${NOM_FIC}
+#  echo $NOM_FIC
+else
+   if ( -f $1 ) then
+       set NOM_FIC=$1
+   else if ( -f $1.xmo ) then
+          set NOM_FIC=$1.xmo
+   else if ( -f $1log ) then
+         set NOM_FIC=$1log
+   else if ( -f $1.log ) then
+              set NOM_FIC=$1.log
+   else
+               set infile=`ls -1c -t *.log|head -1`
+               echo  $1 not found, try    $infile
+               exit
+   endif
+endif
+echo $NOM_FIC
+

@@ -1,0 +1,14 @@
+#!/bin/csh
+set BINDIR="$HOME/bin"
+set BASE=`$BINDIR/nom_fic $1`
+if  ($BASE != "") then
+        set BASE=`basename $BASE '.log'`
+#  echo "${BASE}.log"
+#        getarc ${BASE}.log -a
+        $BINDIR/MXYZ.py  ${BASE}.log $2 |tee $BASE.xyz
+else
+    echo " no log file "
+    ls -d $1*
+endif
+#echo " add all for all structures"
+
