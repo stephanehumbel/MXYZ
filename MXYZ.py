@@ -63,8 +63,7 @@ def read_atom_displ(lines, start_line,size):
 #              ifreq+=1
 #        #print(Ifreq,x_coord2)
         # Stocker les displ dans le dictionnaire avec le numéro d'atome et numeroZ
-        atom_displ[atom_number] = {'symbol': symbol,'numeroZ': numeroZ, 'x': x_coord, 'y': y_coord, 'z': z_co
-ord}
+        atom_displ[atom_number] = {'symbol': symbol,'numeroZ': numeroZ, 'x': x_coord, 'y': y_coord, 'z': z_coord}
 ##       print(atom_displ)
 
     return atom_displ
@@ -103,8 +102,7 @@ def read_atom_coordinates(lines, start_line):
 
 
         # Stocker les coordonnées dans le dictionnaire avec le numéro d'atome et numeroZ
-        atom_coordinates[atom_number] = {'numeroZ': numeroZ,'symbol': symbol, 'x': x_coord, 'y': y_coord, 'z'
-: z_coord}
+        atom_coordinates[atom_number] = {'numeroZ': numeroZ,'symbol': symbol, 'x': x_coord, 'y': y_coord, 'z': z_coord}
 
     return atom_coordinates
 
